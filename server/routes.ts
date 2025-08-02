@@ -8,7 +8,7 @@ import {
   resumeFormSchema,
   type ResumeForm 
 } from "@shared/schema";
-import { analyzeJobAndOptimizeResume, generateCoverLetter, generateResumeInsights } from "./services/openai";
+import { analyzeJobAndOptimizeResume, generateCoverLetter, generateResumeInsights } from "./services/ai";
 import { generateResumePDF } from "./services/pdf";
 import { z } from "zod";
 

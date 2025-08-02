@@ -48,7 +48,7 @@ Authentication is handled through Replit's integrated auth system:
 ## External Service Integrations
 
 ### AI Integration
-- **OpenAI GPT-4**: Core AI service for resume optimization and cover letter generation
+- **Google Gemini 1.5 Pro**: Core AI service for resume optimization and cover letter generation
 - **Use Cases**: Job description analysis, content enhancement, match scoring, and personalized recommendations
 
 ### PDF Generation

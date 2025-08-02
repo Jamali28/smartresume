@@ -1,7 +1,6 @@
-import OpenAI from "openai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
-// the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY!);
 
 export interface JobAnalysisResult {
   matchScore: number;
@@ -41,18 +40,11 @@ export async function analyzeJobAndOptimizeResume(
   jobDescription: string
 ): Promise<JobAnalysisResult> {
   try {
-    const systemPrompt = `You are an expert resume optimizer and ATS specialist. Your task is to analyze a job description and optimize a resume to maximize the match score and improve ATS compatibility.
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
 
-Provide your response in JSON format with the following structure:
-{
-  "matchScore": number (0-100),
-  "enhancedSummary": "optimized professional summary",
-  "optimizedExperience": array of experience objects with optimized descriptions,
-  "suggestedSkills": array of relevant skills to add,
-  "feedback": "brief explanation of changes made"
-}`;
+    const prompt = `You are an expert resume optimizer and ATS specialist. Your task is to analyze a job description and optimize a resume to maximize the match score and improve ATS compatibility.
 
-    const userPrompt = `Job Description:
+Job Description:
 ${jobDescription}
 
 Current Resume Data:
@@ -73,26 +65,35 @@ Please analyze this job description and optimize the resume for maximum ATS comp
 2. Enhancing the professional summary with relevant keywords
 3. Optimizing experience descriptions with action verbs and quantifiable achievements
 4. Suggesting additional relevant skills from the job description
-5. Ensuring ATS-friendly formatting and keyword density`;
+5. Ensuring ATS-friendly formatting and keyword density
 
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o",
-      messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: userPrompt }
-      ],
-      response_format: { type: "json_object" },
-      temperature: 0.7,
-    });
+Provide your response in JSON format with the following structure:
+{
+  "matchScore": number (0-100),
+  "enhancedSummary": "optimized professional summary",
+  "optimizedExperience": array of experience objects with optimized descriptions,
+  "suggestedSkills": array of relevant skills to add,
+  "feedback": "brief explanation of changes made"
+}`;
 
-    const result = JSON.parse(response.choices[0].message.content || '{}');
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const text = response.text();
+    
+    // Extract JSON from response
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      throw new Error("No JSON found in response");
+    }
+    
+    const parsedResult = JSON.parse(jsonMatch[0]);
     
     return {
-      matchScore: Math.max(0, Math.min(100, result.matchScore || 0)),
-      enhancedSummary: result.enhancedSummary || resumeData.summary || '',
-      optimizedExperience: result.optimizedExperience || resumeData.experience,
-      suggestedSkills: result.suggestedSkills || [],
-      feedback: result.feedback || 'Analysis completed successfully.'
+      matchScore: Math.max(0, Math.min(100, parsedResult.matchScore || 0)),
+      enhancedSummary: parsedResult.enhancedSummary || resumeData.summary || '',
+      optimizedExperience: parsedResult.optimizedExperience || resumeData.experience,
+      suggestedSkills: parsedResult.suggestedSkills || [],
+      feedback: parsedResult.feedback || 'Analysis completed successfully.'
     };
   } catch (error) {
     console.error("Error analyzing job and optimizing resume:", error);
@@ -102,9 +103,11 @@ Please analyze this job description and optimize the resume for maximum ATS comp
 
 export async function generateCoverLetter(request: CoverLetterRequest): Promise<string> {
   try {
-    const systemPrompt = `You are an expert cover letter writer. Create compelling, personalized cover letters that highlight relevant experience and demonstrate genuine interest in the role. Write in a ${request.tone} tone.`;
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
 
-    const userPrompt = `Create a cover letter for the following:
+    const prompt = `You are an expert cover letter writer. Create compelling, personalized cover letters that highlight relevant experience and demonstrate genuine interest in the role. Write in a ${request.tone} tone.
+
+Create a cover letter for the following:
 
 Personal Information:
 - Name: ${request.personalInfo.firstName} ${request.personalInfo.lastName}
@@ -126,18 +129,13 @@ Requirements:
 4. Include a strong closing with call to action
 5. Keep it concise (3-4 paragraphs)
 6. Use a ${request.tone} tone throughout
-7. Avoid generic phrases and clichés`;
+7. Avoid generic phrases and clichés
 
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o",
-      messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: userPrompt }
-      ],
-      temperature: 0.8,
-    });
+Provide only the cover letter content, no additional formatting or explanations.`;
 
-    return response.choices[0].message.content || '';
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    return response.text();
   } catch (error) {
     console.error("Error generating cover letter:", error);
     throw new Error("Failed to generate cover letter");
@@ -151,17 +149,11 @@ export async function generateResumeInsights(resumeData: any): Promise<{
   overallRating: number;
 }> {
   try {
-    const systemPrompt = `You are a resume analysis expert. Analyze the provided resume and provide insights on its strengths, weaknesses, and improvement suggestions. 
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
 
-Provide your response in JSON format:
-{
-  "strengthsScore": number (0-100),
-  "weaknessesScore": number (0-100),
-  "suggestions": array of specific improvement suggestions,
-  "overallRating": number (0-100)
-}`;
+    const prompt = `You are a resume analysis expert. Analyze the provided resume and provide insights on its strengths, weaknesses, and improvement suggestions.
 
-    const userPrompt = `Analyze this resume:
+Analyze this resume:
 
 Personal Info: ${resumeData.personalInfo.firstName} ${resumeData.personalInfo.lastName}
 Title: ${resumeData.personalInfo.title}
@@ -180,25 +172,33 @@ Provide detailed analysis focusing on:
 2. Achievement quantification
 3. Keyword optimization
 4. Structure and formatting
-5. ATS compatibility`;
+5. ATS compatibility
 
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o",
-      messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: userPrompt }
-      ],
-      response_format: { type: "json_object" },
-      temperature: 0.7,
-    });
+Provide your response in JSON format:
+{
+  "strengthsScore": number (0-100),
+  "weaknessesScore": number (0-100),
+  "suggestions": array of specific improvement suggestions,
+  "overallRating": number (0-100)
+}`;
 
-    const result = JSON.parse(response.choices[0].message.content || '{}');
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const text = response.text();
+    
+    // Extract JSON from response
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      throw new Error("No JSON found in response");
+    }
+    
+    const parsedResult = JSON.parse(jsonMatch[0]);
     
     return {
-      strengthsScore: Math.max(0, Math.min(100, result.strengthsScore || 75)),
-      weaknessesScore: Math.max(0, Math.min(100, result.weaknessesScore || 25)),
-      suggestions: result.suggestions || [],
-      overallRating: Math.max(0, Math.min(100, result.overallRating || 75))
+      strengthsScore: Math.max(0, Math.min(100, parsedResult.strengthsScore || 75)),
+      weaknessesScore: Math.max(0, Math.min(100, parsedResult.weaknessesScore || 25)),
+      suggestions: parsedResult.suggestions || [],
+      overallRating: Math.max(0, Math.min(100, parsedResult.overallRating || 75))
     };
   } catch (error) {
     console.error("Error generating resume insights:", error);
