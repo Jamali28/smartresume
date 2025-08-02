@@ -144,7 +144,7 @@ export default function Dashboard() {
             </div>
             <div className="flex items-center space-x-3">
               <div className="w-8 h-8 bg-slate-200 rounded-full overflow-hidden">
-                {user.profileImageUrl ? (
+                {user?.profileImageUrl ? (
                   <img 
                     src={user.profileImageUrl} 
                     alt="Profile" 
@@ -153,13 +153,13 @@ export default function Dashboard() {
                 ) : (
                   <div className="w-full h-full bg-slate-300 flex items-center justify-center">
                     <span className="text-xs font-medium text-slate-600">
-                      {user.firstName?.[0]}{user.lastName?.[0]}
+                      {user?.firstName?.[0]}{user?.lastName?.[0]}
                     </span>
                   </div>
                 )}
               </div>
               <span className="text-slate-700 text-sm">
-                {user.firstName} {user.lastName}
+                {user?.firstName} {user?.lastName}
               </span>
               <Button variant="ghost" size="sm" onClick={handleLogout}>
                 <LogOut className="w-4 h-4" />
@@ -173,7 +173,7 @@ export default function Dashboard() {
         {/* Welcome Section */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-slate-900 mb-2">
-            Welcome back, {user.firstName}!
+            Welcome back, {user?.firstName}!
           </h1>
           <p className="text-slate-600">
             Ready to create your next winning resume?

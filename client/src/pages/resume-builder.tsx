@@ -319,7 +319,7 @@ export default function ResumeBuilder() {
                 Step {currentStep} of {STEPS.length}
               </Badge>
               <div className="w-8 h-8 bg-slate-200 rounded-full overflow-hidden">
-                {user.profileImageUrl ? (
+                {user?.profileImageUrl ? (
                   <img 
                     src={user.profileImageUrl} 
                     alt="Profile" 
@@ -328,7 +328,7 @@ export default function ResumeBuilder() {
                 ) : (
                   <div className="w-full h-full bg-slate-300 flex items-center justify-center">
                     <span className="text-xs font-medium text-slate-600">
-                      {user.firstName?.[0]}{user.lastName?.[0]}
+                      {user?.firstName?.[0]}{user?.lastName?.[0]}
                     </span>
                   </div>
                 )}

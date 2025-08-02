@@ -1,3 +1,4 @@
+import puppeteer from 'puppeteer';
 import type { Resume } from "@shared/schema";
 
 export async function generateResumePDF(resume: Resume): Promise<Buffer> {
@@ -174,19 +175,28 @@ export async function generateResumePDF(resume: Resume): Promise<Buffer> {
     </html>
     `;
 
-    // For production, you would use a proper HTML to PDF library like Puppeteer
-    // For now, we'll return a simple PDF-like response
-    // In a real implementation, you'd use something like:
-    // const puppeteer = require('puppeteer');
-    // const browser = await puppeteer.launch();
-    // const page = await browser.newPage();
-    // await page.setContent(htmlContent);
-    // const pdf = await page.pdf({ format: 'A4' });
-    // await browser.close();
-    // return pdf;
-
-    // For this demo, return HTML as buffer (in production, implement proper PDF generation)
-    return Buffer.from(htmlContent, 'utf-8');
+    // Use Puppeteer for PDF generation
+    const browser = await puppeteer.launch({
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox']
+    });
+    
+    const page = await browser.newPage();
+    await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
+    
+    const pdfBuffer = await page.pdf({
+      format: 'A4',
+      printBackground: true,
+      margin: {
+        top: '0.5in',
+        right: '0.5in',
+        bottom: '0.5in',
+        left: '0.5in'
+      }
+    });
+    
+    await browser.close();
+    return pdfBuffer;
   } catch (error) {
     console.error("Error generating PDF:", error);
     throw new Error("Failed to generate PDF");

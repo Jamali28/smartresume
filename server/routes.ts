@@ -8,7 +8,7 @@ import {
   resumeFormSchema,
   type ResumeForm 
 } from "@shared/schema";
-import { generateResumeContent, generateCoverLetter } from "./services/openai";
+import { analyzeJobAndOptimizeResume, generateCoverLetter, generateResumeInsights } from "./services/openai";
 import { generateResumePDF } from "./services/pdf";
 import { z } from "zod";
 
@@ -39,8 +39,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // If job description is provided, optimize with AI
       if (resumeData.jobDescription) {
-        const aiResult = await generateResumeContent(resumeData, resumeData.jobDescription);
-        optimizedContent = aiResult.optimizedResume;
+        const aiResult = await analyzeJobAndOptimizeResume(resumeData, resumeData.jobDescription);
+        optimizedContent = {
+          ...resumeData,
+          summary: aiResult.enhancedSummary,
+          experience: aiResult.optimizedExperience,
+          skills: [...resumeData.skills, ...aiResult.suggestedSkills]
+        };
         matchScore = aiResult.matchScore;
       }
 
