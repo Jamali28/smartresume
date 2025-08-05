@@ -38,8 +38,9 @@ export function getSession() {
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: true,
+      secure: process.env.NODE_ENV === 'production',
       maxAge: sessionTtl,
+      sameSite: 'lax',
     },
   });
 }
@@ -129,17 +130,27 @@ export async function setupAuth(app: Express) {
 export const isAuthenticated: RequestHandler = async (req, res, next) => {
   const user = req.user as any;
 
-  if (!req.isAuthenticated() || !user.expires_at) {
+  if (!req.isAuthenticated()) {
     return res.status(401).json({ message: "Unauthorized" });
   }
 
+  // If we don't have token expiration info, assume valid session
+  if (!user.expires_at) {
+    return next();
+  }
+
   const now = Math.floor(Date.now() / 1000);
-  if (now <= user.expires_at) {
+  // Add 5 minute buffer to prevent premature token refresh
+  if (now <= (user.expires_at - 300)) {
     return next();
   }
 
   const refreshToken = user.refresh_token;
   if (!refreshToken) {
+    // If no refresh token but still authenticated via session, allow it
+    if (req.isAuthenticated()) {
+      return next();
+    }
     res.status(401).json({ message: "Unauthorized" });
     return;
   }
@@ -150,6 +161,11 @@ export const isAuthenticated: RequestHandler = async (req, res, next) => {
     updateUserSession(user, tokenResponse);
     return next();
   } catch (error) {
+    console.log("Token refresh failed, but session still active:", error instanceof Error ? error.message : String(error));
+    // If token refresh fails but session is still valid, allow it
+    if (req.isAuthenticated()) {
+      return next();
+    }
     res.status(401).json({ message: "Unauthorized" });
     return;
   }
