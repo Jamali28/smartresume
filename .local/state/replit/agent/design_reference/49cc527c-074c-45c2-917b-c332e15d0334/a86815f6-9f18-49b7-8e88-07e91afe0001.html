@@ -1,0 +1,987 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartResume - AI Resume & Cover Letter Builder</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563EB',
+                        secondary: '#059669',
+                        accent: '#7C3AED',
+                        neutral: {
+                            50: '#F8FAFC',
+                            100: '#F1F5F9',
+                            200: '#E2E8F0',
+                            300: '#CBD5E1',
+                            400: '#94A3B8',
+                            500: '#64748B',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1E293B',
+                            900: '#0F172A'
+                        }
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'system-ui', 'sans-serif']
+                    }
+                }
+            }
+        };
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-neutral-50 font-sans">
+    <!-- @COMPONENT: Header -->
+    <header class="bg-white border-b border-neutral-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center">
+                        <i class="fas fa-file-alt text-white text-sm"></i>
+                    </div>
+                    <span class="text-xl font-bold text-neutral-900">SmartResume</span>
+                </div>
+                
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="#features" class="text-neutral-600 hover:text-primary transition-colors">Features</a>
+                    <a href="#templates" class="text-neutral-600 hover:text-primary transition-colors">Templates</a>
+                    <a href="#pricing" class="text-neutral-600 hover:text-primary transition-colors">Pricing</a>
+                </nav>
+                
+                <div class="flex items-center space-x-4">
+                    <button class="text-neutral-600 hover:text-primary font-medium transition-colors">Sign In</button>
+                    <button class="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors">
+                        Get Started
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- @END_COMPONENT: Header -->
+
+    <!-- @COMPONENT: HeroSection -->
+    <section class="bg-gradient-to-br from-neutral-50 to-blue-50 py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <div class="inline-flex items-center px-3 py-1 rounded-full bg-accent/10 text-accent text-sm font-medium mb-6">
+                        <i class="fas fa-sparkles mr-2"></i>
+                        Powered by AI
+                    </div>
+                    <h1 class="text-4xl lg:text-5xl font-bold text-neutral-900 leading-tight mb-6">
+                        Land your next job with <span class="text-primary">Smart AI</span>
+                    </h1>
+                    <p class="text-lg text-neutral-600 mb-8 leading-relaxed">
+                        Create personalized, job-targeted resumes and cover letters in minutes using GPT-4. 
+                        Stand out from the competition with AI-powered optimization.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <button class="bg-primary text-white px-8 py-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center">
+                            <i class="fas fa-rocket mr-2"></i>
+                            Start Building Free
+                        </button>
+                        <button class="border border-neutral-300 text-neutral-700 px-8 py-4 rounded-lg font-semibold hover:bg-neutral-50 transition-colors flex items-center justify-center">
+                            <i class="fas fa-play mr-2"></i>
+                            Watch Demo
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="relative">
+                    <!-- Professional woman working on laptop in modern office setting -->
+                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600" 
+                         alt="Professional woman working on resume" 
+                         class="rounded-2xl shadow-2xl w-full">
+                    <div class="absolute -bottom-6 -left-6 bg-white rounded-xl shadow-lg p-4 max-w-xs">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-12 h-12 bg-secondary/10 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-check text-secondary"></i>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-neutral-900">Resume Generated!</p>
+                                <p class="text-sm text-neutral-600">Tailored for Software Engineer</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: HeroSection -->
+
+    <!-- @COMPONENT: FeaturesSection -->
+    <section id="features" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl lg:text-4xl font-bold text-neutral-900 mb-4">
+                    Everything you need to land your dream job
+                </h2>
+                <p class="text-lg text-neutral-600 max-w-2xl mx-auto">
+                    Our AI-powered platform creates personalized resumes and cover letters that get noticed by hiring managers.
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-neutral-50 rounded-xl p-8 hover:shadow-lg transition-shadow">
+                    <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-brain text-primary text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-neutral-900 mb-4">AI-Powered Generation</h3>
+                    <p class="text-neutral-600">GPT-4 analyzes job descriptions and crafts personalized resumes that match employer requirements perfectly.</p>
+                </div>
+                
+                <div class="bg-neutral-50 rounded-xl p-8 hover:shadow-lg transition-shadow">
+                    <div class="w-12 h-12 bg-secondary/10 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-palette text-secondary text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-neutral-900 mb-4">Professional Templates</h3>
+                    <p class="text-neutral-600">Choose from modern, ATS-friendly templates designed by career experts and loved by recruiters.</p>
+                </div>
+                
+                <div class="bg-neutral-50 rounded-xl p-8 hover:shadow-lg transition-shadow">
+                    <div class="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-file-pdf text-accent text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-neutral-900 mb-4">One-Click Export</h3>
+                    <p class="text-neutral-600">Download your resume as a professional PDF or share it directly with employers.</p>
+                </div>
+                
+                <div class="bg-neutral-50 rounded-xl p-8 hover:shadow-lg transition-shadow">
+                    <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-envelope text-primary text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-neutral-900 mb-4">Cover Letter Generator</h3>
+                    <p class="text-neutral-600">Generate compelling cover letters with customizable tone - from formal to friendly.</p>
+                </div>
+                
+                <div class="bg-neutral-50 rounded-xl p-8 hover:shadow-lg transition-shadow">
+                    <div class="w-12 h-12 bg-secondary/10 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-history text-secondary text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-neutral-900 mb-4">Version History</h3>
+                    <p class="text-neutral-600">Keep track of all your resume versions and easily switch between different job applications.</p>
+                </div>
+                
+                <div class="bg-neutral-50 rounded-xl p-8 hover:shadow-lg transition-shadow">
+                    <div class="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-mobile-alt text-accent text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-neutral-900 mb-4">Mobile Optimized</h3>
+                    <p class="text-neutral-600">Build and edit your resume on any device with our fully responsive design.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: FeaturesSection -->
+
+    <!-- @COMPONENT: DashboardPreview -->
+    <section class="py-20 bg-gradient-to-br from-neutral-50 to-purple-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl lg:text-4xl font-bold text-neutral-900 mb-4">
+                    Your resume command center
+                </h2>
+                <p class="text-lg text-neutral-600 max-w-2xl mx-auto">
+                    Manage all your resumes, track applications, and generate new versions in one intuitive dashboard.
+                </p>
+            </div>
+            
+            <!-- Dashboard Mockup -->
+            <div class="bg-white rounded-2xl shadow-2xl border border-neutral-200 overflow-hidden">
+                <!-- Dashboard Header -->
+                <div class="bg-neutral-900 px-6 py-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-8 h-8 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center">
+                                <i class="fas fa-file-alt text-white text-sm"></i>
+                            </div>
+                            <span class="text-white font-semibold">SmartResume Dashboard</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-neutral-700 rounded-full"></div>
+                            <span class="text-neutral-300 text-sm" data-bind="user.name">Sarah Johnson</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Dashboard Content -->
+                <div class="p-6">
+                    <!-- Stats Cards -->
+                    <div class="grid md:grid-cols-3 gap-6 mb-8">
+                        <div class="bg-primary/5 border border-primary/20 rounded-xl p-6">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-2xl font-bold text-primary" data-bind="stats.resumes">12</p>
+                                    <p class="text-neutral-600">Resumes Created</p>
+                                </div>
+                                <i class="fas fa-file-alt text-primary text-2xl"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-secondary/5 border border-secondary/20 rounded-xl p-6">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-2xl font-bold text-secondary" data-bind="stats.applications">28</p>
+                                    <p class="text-neutral-600">Applications Sent</p>
+                                </div>
+                                <i class="fas fa-paper-plane text-secondary text-2xl"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-accent/5 border border-accent/20 rounded-xl p-6">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-2xl font-bold text-accent" data-bind="stats.interviews">5</p>
+                                    <p class="text-neutral-600">Interviews Landed</p>
+                                </div>
+                                <i class="fas fa-handshake text-accent text-2xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Actions -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-semibold text-neutral-900 mb-4">Quick Actions</h3>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <button class="bg-primary text-white p-6 rounded-xl hover:bg-blue-700 transition-colors flex items-center space-x-4">
+                                <i class="fas fa-plus text-2xl"></i>
+                                <div class="text-left">
+                                    <p class="font-semibold">Create New Resume</p>
+                                    <p class="text-blue-100 text-sm">Start with AI-powered generation</p>
+                                </div>
+                            </button>
+                            
+                            <button class="border border-neutral-300 text-neutral-700 p-6 rounded-xl hover:bg-neutral-50 transition-colors flex items-center space-x-4">
+                                <i class="fas fa-upload text-2xl"></i>
+                                <div class="text-left">
+                                    <p class="font-semibold">Upload Existing Resume</p>
+                                    <p class="text-neutral-500 text-sm">Import and enhance with AI</p>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Recent Resumes -->
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold text-neutral-900">Recent Resumes</h3>
+                            <button class="text-primary hover:underline">View All</button>
+                        </div>
+                        
+                        <!-- @MAP: resumes.map(resume => ( -->
+                        <div class="space-y-4">
+                            <div class="bg-neutral-50 rounded-xl p-4 flex items-center justify-between hover:bg-neutral-100 transition-colors">
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-file-alt text-primary"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold text-neutral-900" data-bind="resume.title">Software Engineer - Google</p>
+                                        <p class="text-sm text-neutral-600" data-bind="resume.updatedAt">Updated 2 hours ago</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <button class="text-neutral-500 hover:text-primary p-2">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="text-neutral-500 hover:text-primary p-2">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+                                    <button class="text-neutral-500 hover:text-red-500 p-2">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-neutral-50 rounded-xl p-4 flex items-center justify-between hover:bg-neutral-100 transition-colors">
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-12 h-12 bg-secondary/10 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-file-alt text-secondary"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold text-neutral-900" data-bind="resume.title">Product Manager - Meta</p>
+                                        <p class="text-sm text-neutral-600" data-bind="resume.updatedAt">Updated yesterday</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <button class="text-neutral-500 hover:text-primary p-2">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="text-neutral-500 hover:text-primary p-2">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+                                    <button class="text-neutral-500 hover:text-red-500 p-2">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-neutral-50 rounded-xl p-4 flex items-center justify-between hover:bg-neutral-100 transition-colors">
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-file-alt text-accent"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold text-neutral-900" data-bind="resume.title">UX Designer - Airbnb</p>
+                                        <p class="text-sm text-neutral-600" data-bind="resume.updatedAt">Updated 3 days ago</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <button class="text-neutral-500 hover:text-primary p-2">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="text-neutral-500 hover:text-primary p-2">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+                                    <button class="text-neutral-500 hover:text-red-500 p-2">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- @END_MAP )) -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: DashboardPreview -->
+
+    <!-- @COMPONENT: ResumeBuilder -->
+    <section class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl lg:text-4xl font-bold text-neutral-900 mb-4">
+                    Build your resume in 3 simple steps
+                </h2>
+                <p class="text-lg text-neutral-600 max-w-2xl mx-auto">
+                    Our guided process makes it easy to create a professional resume that stands out.
+                </p>
+            </div>
+            
+            <!-- Resume Builder Interface -->
+            <div class="bg-white rounded-2xl shadow-xl border border-neutral-200 overflow-hidden">
+                <!-- Builder Header -->
+                <div class="bg-gradient-to-r from-primary to-accent px-6 py-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-white font-semibold text-lg">Resume Builder</h3>
+                        <div class="flex items-center space-x-2">
+                            <span class="bg-white/20 text-white px-3 py-1 rounded-full text-sm">Step 1 of 3</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Progress Bar -->
+                <div class="bg-neutral-100 h-2">
+                    <div class="bg-primary h-full w-1/3 transition-all duration-500"></div>
+                </div>
+                
+                <!-- Builder Content -->
+                <div class="grid lg:grid-cols-2 gap-0">
+                    <!-- Form Section -->
+                    <div class="p-8 bg-neutral-50">
+                        <div class="mb-6">
+                            <h4 class="text-xl font-semibold text-neutral-900 mb-2">Personal Information</h4>
+                            <p class="text-neutral-600">Let's start with your basic details</p>
+                        </div>
+                        
+                        <form class="space-y-6">
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-neutral-700 mb-2">First Name</label>
+                                    <input type="text" data-mock="true" value="Sarah" class="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-neutral-700 mb-2">Last Name</label>
+                                    <input type="text" data-mock="true" value="Johnson" class="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-neutral-700 mb-2">Professional Title</label>
+                                <input type="text" data-mock="true" value="Senior Software Engineer" class="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
+                            </div>
+                            
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-neutral-700 mb-2">Email</label>
+                                    <input type="email" data-mock="true" value="sarah.johnson@email.com" class="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-neutral-700 mb-2">Phone</label>
+                                    <input type="tel" data-mock="true" value="+1 (555) 123-4567" class="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-neutral-700 mb-2">Professional Summary</label>
+                                <textarea rows="4" data-mock="true" class="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all" placeholder="Tell us about your experience and career goals...">Experienced software engineer with 5+ years developing scalable web applications. Passionate about clean code, user experience, and emerging technologies.</textarea>
+                            </div>
+                            
+                            <div class="flex justify-between pt-6">
+                                <button type="button" class="px-6 py-3 border border-neutral-300 text-neutral-700 rounded-lg hover:bg-neutral-50 transition-colors">
+                                    <i class="fas fa-arrow-left mr-2"></i>Back
+                                </button>
+                                <button type="button" class="px-6 py-3 bg-primary text-white rounded-lg hover:bg-blue-700 transition-colors">
+                                    Next Step<i class="fas fa-arrow-right ml-2"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- Preview Section -->
+                    <div class="p-8 bg-white border-l border-neutral-200">
+                        <div class="mb-6">
+                            <h4 class="text-xl font-semibold text-neutral-900 mb-2">Live Preview</h4>
+                            <p class="text-neutral-600">See your resume as you build it</p>
+                        </div>
+                        
+                        <!-- Resume Preview -->
+                        <div class="bg-white border border-neutral-200 rounded-lg p-6 shadow-sm" style="transform: scale(0.8); transform-origin: top left; width: 125%; height: 600px; overflow: hidden;">
+                            <div class="text-center mb-6">
+                                <h2 class="text-2xl font-bold text-neutral-900" data-bind="personalInfo.fullName">Sarah Johnson</h2>
+                                <p class="text-lg text-primary" data-bind="personalInfo.title">Senior Software Engineer</p>
+                                <div class="flex justify-center items-center space-x-4 mt-2 text-sm text-neutral-600">
+                                    <span data-bind="personalInfo.email">sarah.johnson@email.com</span>
+                                    <span>•</span>
+                                    <span data-bind="personalInfo.phone">+1 (555) 123-4567</span>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-6">
+                                <h3 class="text-lg font-semibold text-neutral-900 mb-2 border-b-2 border-primary">Professional Summary</h3>
+                                <p class="text-neutral-700 text-sm leading-relaxed" data-bind="personalInfo.summary">
+                                    Experienced software engineer with 5+ years developing scalable web applications. Passionate about clean code, user experience, and emerging technologies.
+                                </p>
+                            </div>
+                            
+                            <div class="mb-6">
+                                <h3 class="text-lg font-semibold text-neutral-900 mb-2 border-b-2 border-primary">Experience</h3>
+                                <div class="text-neutral-400 text-sm italic">Complete step 2 to see your experience here...</div>
+                            </div>
+                            
+                            <div class="mb-6">
+                                <h3 class="text-lg font-semibold text-neutral-900 mb-2 border-b-2 border-primary">Skills</h3>
+                                <div class="text-neutral-400 text-sm italic">Complete step 3 to see your skills here...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: ResumeBuilder -->
+
+    <!-- @COMPONENT: AIGeneration -->
+    <section class="py-20 bg-gradient-to-br from-purple-50 to-blue-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl lg:text-4xl font-bold text-neutral-900 mb-4">
+                    AI-powered optimization in action
+                </h2>
+                <p class="text-lg text-neutral-600 max-w-2xl mx-auto">
+                    Watch how our AI analyzes job descriptions and optimizes your resume for each application.
+                </p>
+            </div>
+            
+            <!-- AI Generation Interface -->
+            <div class="bg-white rounded-2xl shadow-xl border border-neutral-200 overflow-hidden">
+                <!-- Header -->
+                <div class="bg-gradient-to-r from-accent to-purple-600 px-6 py-4">
+                    <div class="flex items-center space-x-3">
+                        <i class="fas fa-magic text-white text-lg"></i>
+                        <h3 class="text-white font-semibold text-lg">AI Resume Optimizer</h3>
+                        <span class="bg-white/20 text-white px-2 py-1 rounded text-xs">GPT-4 Powered</span>
+                    </div>
+                </div>
+                
+                <div class="grid lg:grid-cols-2 gap-0">
+                    <!-- Input Section -->
+                    <div class="p-8 bg-neutral-50">
+                        <div class="mb-6">
+                            <h4 class="text-xl font-semibold text-neutral-900 mb-2">Job Description</h4>
+                            <p class="text-neutral-600">Paste the job description you're applying for</p>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block text-sm font-medium text-neutral-700 mb-2">Company & Role</label>
+                                <input type="text" data-mock="true" value="Google - Senior Software Engineer" class="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-transparent transition-all">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-neutral-700 mb-2">Job Description</label>
+                                <textarea rows="8" data-mock="true" class="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-transparent transition-all">We are looking for a Senior Software Engineer to join our team. You will be responsible for:
+
+• Designing and implementing scalable backend systems
+• Working with microservices architecture
+• Collaborating with cross-functional teams
+• Mentoring junior developers
+• Ensuring code quality and best practices
+
+Requirements:
+• 5+ years of software development experience
+• Strong experience with Python, Java, or Go
+• Experience with cloud platforms (GCP, AWS)
+• Knowledge of containerization (Docker, Kubernetes)
+• Excellent communication skills</textarea>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-neutral-700 mb-2">Cover Letter Tone</label>
+                                <select class="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-transparent transition-all">
+                                    <option>Professional</option>
+                                    <option>Friendly</option>
+                                    <option>Enthusiastic</option>
+                                    <option>Formal</option>
+                                </select>
+                            </div>
+                            
+                            <button class="w-full bg-accent text-white py-4 rounded-lg font-semibold hover:bg-purple-700 transition-colors flex items-center justify-center">
+                                <i class="fas fa-sparkles mr-2"></i>
+                                Generate Optimized Resume
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- AI Processing Section -->
+                    <div class="p-8 bg-white border-l border-neutral-200">
+                        <div class="mb-6">
+                            <h4 class="text-xl font-semibold text-neutral-900 mb-2">AI Analysis</h4>
+                            <p class="text-neutral-600">GPT-4 is optimizing your resume...</p>
+                        </div>
+                        
+                        <!-- Processing Steps -->
+                        <div class="space-y-4">
+                            <div class="flex items-center space-x-3 p-4 bg-secondary/5 rounded-lg border border-secondary/20">
+                                <i class="fas fa-check-circle text-secondary"></i>
+                                <div>
+                                    <p class="font-medium text-neutral-900">Job Description Analyzed</p>
+                                    <p class="text-sm text-neutral-600">Extracted key requirements and skills</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center space-x-3 p-4 bg-secondary/5 rounded-lg border border-secondary/20">
+                                <i class="fas fa-check-circle text-secondary"></i>
+                                <div>
+                                    <p class="font-medium text-neutral-900">Resume Content Optimized</p>
+                                    <p class="text-sm text-neutral-600">Matched your experience to job requirements</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center space-x-3 p-4 bg-accent/5 rounded-lg border border-accent/20">
+                                <div class="w-5 h-5 border-2 border-accent border-t-transparent rounded-full animate-spin"></div>
+                                <div>
+                                    <p class="font-medium text-neutral-900">Generating Cover Letter</p>
+                                    <p class="text-sm text-neutral-600">Creating personalized cover letter...</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center space-x-3 p-4 bg-neutral-100 rounded-lg border border-neutral-200">
+                                <i class="fas fa-clock text-neutral-400"></i>
+                                <div>
+                                    <p class="font-medium text-neutral-600">ATS Optimization</p>
+                                    <p class="text-sm text-neutral-500">Ensuring compatibility with applicant tracking systems</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Match Score -->
+                        <div class="mt-8 p-6 bg-gradient-to-r from-secondary/10 to-primary/10 rounded-xl border border-secondary/20">
+                            <div class="text-center">
+                                <div class="text-3xl font-bold text-secondary mb-2">94%</div>
+                                <p class="text-neutral-700 font-medium">Match Score</p>
+                                <p class="text-sm text-neutral-600 mt-1">Your resume is highly optimized for this role</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: AIGeneration -->
+
+    <!-- @COMPONENT: TemplatesSection -->
+    <section id="templates" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl lg:text-4xl font-bold text-neutral-900 mb-4">
+                    Professional templates that get noticed
+                </h2>
+                <p class="text-lg text-neutral-600 max-w-2xl mx-auto">
+                    Choose from our collection of ATS-friendly templates designed by career experts.
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Template 1 - Modern -->
+                <div class="group cursor-pointer">
+                    <div class="bg-white border-2 border-neutral-200 rounded-xl overflow-hidden hover:border-primary transition-colors shadow-lg hover:shadow-xl">
+                        <div class="aspect-[3/4] bg-gradient-to-br from-neutral-50 to-neutral-100 p-6 relative">
+                            <!-- Modern resume template mockup -->
+                            <div class="bg-white h-full rounded-lg shadow-sm p-4 text-xs">
+                                <div class="text-center mb-3">
+                                    <div class="w-12 h-12 bg-primary rounded-full mx-auto mb-2"></div>
+                                    <div class="h-2 bg-neutral-800 rounded mb-1"></div>
+                                    <div class="h-1 bg-primary rounded w-2/3 mx-auto"></div>
+                                </div>
+                                <div class="space-y-2">
+                                    <div class="h-1 bg-neutral-300 rounded"></div>
+                                    <div class="h-1 bg-neutral-300 rounded w-3/4"></div>
+                                    <div class="h-1 bg-neutral-300 rounded w-1/2"></div>
+                                </div>
+                                <div class="mt-3 space-y-1">
+                                    <div class="h-1 bg-primary rounded w-1/3"></div>
+                                    <div class="h-1 bg-neutral-200 rounded"></div>
+                                    <div class="h-1 bg-neutral-200 rounded w-4/5"></div>
+                                </div>
+                            </div>
+                            <div class="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity rounded-xl"></div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-lg font-semibold text-neutral-900 mb-2">Modern Professional</h3>
+                            <p class="text-neutral-600 text-sm">Clean and contemporary design perfect for tech and creative roles.</p>
+                            <div class="flex items-center justify-between mt-4">
+                                <span class="text-primary font-medium">Most Popular</span>
+                                <button class="bg-primary text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition-colors">
+                                    Use Template
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Template 2 - Minimal -->
+                <div class="group cursor-pointer">
+                    <div class="bg-white border-2 border-neutral-200 rounded-xl overflow-hidden hover:border-primary transition-colors shadow-lg hover:shadow-xl">
+                        <div class="aspect-[3/4] bg-gradient-to-br from-neutral-50 to-neutral-100 p-6 relative">
+                            <!-- Minimal resume template mockup -->
+                            <div class="bg-white h-full rounded-lg shadow-sm p-4 text-xs">
+                                <div class="mb-4">
+                                    <div class="h-2 bg-neutral-800 rounded mb-1"></div>
+                                    <div class="h-1 bg-neutral-600 rounded w-1/2"></div>
+                                </div>
+                                <div class="space-y-3">
+                                    <div>
+                                        <div class="h-1 bg-neutral-800 rounded w-1/4 mb-1"></div>
+                                        <div class="space-y-1">
+                                            <div class="h-1 bg-neutral-300 rounded"></div>
+                                            <div class="h-1 bg-neutral-300 rounded w-3/4"></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="h-1 bg-neutral-800 rounded w-1/3 mb-1"></div>
+                                        <div class="space-y-1">
+                                            <div class="h-1 bg-neutral-300 rounded w-5/6"></div>
+                                            <div class="h-1 bg-neutral-300 rounded w-2/3"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity rounded-xl"></div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-lg font-semibold text-neutral-900 mb-2">Minimal Clean</h3>
+                            <p class="text-neutral-600 text-sm">Simple and elegant design that focuses on your content.</p>
+                            <div class="flex items-center justify-between mt-4">
+                                <span class="text-secondary font-medium">ATS Optimized</span>
+                                <button class="bg-primary text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition-colors">
+                                    Use Template
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Template 3 - Executive -->
+                <div class="group cursor-pointer">
+                    <div class="bg-white border-2 border-neutral-200 rounded-xl overflow-hidden hover:border-primary transition-colors shadow-lg hover:shadow-xl">
+                        <div class="aspect-[3/4] bg-gradient-to-br from-neutral-50 to-neutral-100 p-6 relative">
+                            <!-- Executive resume template mockup -->
+                            <div class="bg-white h-full rounded-lg shadow-sm p-4 text-xs relative">
+                                <div class="absolute left-0 top-0 bottom-0 w-1 bg-accent"></div>
+                                <div class="pl-3">
+                                    <div class="mb-3">
+                                        <div class="h-2 bg-neutral-800 rounded mb-1"></div>
+                                        <div class="h-1 bg-accent rounded w-2/3"></div>
+                                    </div>
+                                    <div class="space-y-2">
+                                        <div>
+                                            <div class="h-1 bg-accent rounded w-1/4 mb-1"></div>
+                                            <div class="space-y-1">
+                                                <div class="h-1 bg-neutral-300 rounded"></div>
+                                                <div class="h-1 bg-neutral-300 rounded w-4/5"></div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="h-1 bg-accent rounded w-1/3 mb-1"></div>
+                                            <div class="space-y-1">
+                                                <div class="h-1 bg-neutral-300 rounded w-5/6"></div>
+                                                <div class="h-1 bg-neutral-300 rounded w-2/3"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity rounded-xl"></div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-lg font-semibold text-neutral-900 mb-2">Executive</h3>
+                            <p class="text-neutral-600 text-sm">Professional design perfect for senior-level positions.</p>
+                            <div class="flex items-center justify-between mt-4">
+                                <span class="text-accent font-medium">Premium</span>
+                                <button class="bg-primary text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition-colors">
+                                    Use Template
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: TemplatesSection -->
+
+    <!-- @COMPONENT: PricingSection -->
+    <section id="pricing" class="py-20 bg-gradient-to-br from-neutral-50 to-blue-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl lg:text-4xl font-bold text-neutral-900 mb-4">
+                    Choose the plan that works for you
+                </h2>
+                <p class="text-lg text-neutral-600 max-w-2xl mx-auto">
+                    Start free and upgrade when you need more features. No hidden fees, cancel anytime.
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <!-- Free Plan -->
+                <div class="bg-white rounded-2xl shadow-lg border border-neutral-200 p-8">
+                    <div class="text-center mb-8">
+                        <h3 class="text-2xl font-bold text-neutral-900 mb-2">Free</h3>
+                        <div class="text-4xl font-bold text-neutral-900 mb-1">$0</div>
+                        <p class="text-neutral-600">Perfect for getting started</p>
+                    </div>
+                    
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-check text-secondary"></i>
+                            <span class="text-neutral-700">1 resume creation</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-check text-secondary"></i>
+                            <span class="text-neutral-700">Basic AI optimization</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-check text-secondary"></i>
+                            <span class="text-neutral-700">1 template option</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-check text-secondary"></i>
+                            <span class="text-neutral-700">PDF export with watermark</span>
+                        </li>
+                        <li class="flex items-center space-x-3 opacity-50">
+                            <i class="fas fa-times text-neutral-400"></i>
+                            <span class="text-neutral-400">Cover letter generation</span>
+                        </li>
+                    </ul>
+                    
+                    <button class="w-full bg-neutral-100 text-neutral-700 py-3 rounded-lg font-semibold hover:bg-neutral-200 transition-colors">
+                        Start Free
+                    </button>
+                </div>
+                
+                <!-- Pro Plan -->
+                <div class="bg-white rounded-2xl shadow-xl border-2 border-primary p-8 relative">
+                    <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                        <span class="bg-primary text-white px-4 py-1 rounded-full text-sm font-medium">Most Popular</span>
+                    </div>
+                    
+                    <div class="text-center mb-8">
+                        <h3 class="text-2xl font-bold text-neutral-900 mb-2">Pro</h3>
+                        <div class="text-4xl font-bold text-primary mb-1">$19</div>
+                        <p class="text-neutral-600">per month</p>
+                    </div>
+                    
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-check text-secondary"></i>
+                            <span class="text-neutral-700">Unlimited resumes</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-check text-secondary"></i>
+                            <span class="text-neutral-700">Advanced AI optimization</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-check text-secondary"></i>
+                            <span class="text-neutral-700">All template designs</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-check text-secondary"></i>
+                            <span class="text-neutral-700">Clean PDF exports</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-check text-secondary"></i>
+                            <span class="text-neutral-700">AI cover letter generation</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-check text-secondary"></i>
+                            <span class="text-neutral-700">Version history</span>
+                        </li>
+                    </ul>
+                    
+                    <button class="w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+                        Start Pro Trial
+                    </button>
+                </div>
+                
+                <!-- Enterprise Plan -->
+                <div class="bg-white rounded-2xl shadow-lg border border-neutral-200 p-8">
+                    <div class="text-center mb-8">
+                        <h3 class="text-2xl font-bold text-neutral-900 mb-2">Enterprise</h3>
+                        <div class="text-4xl font-bold text-neutral-900 mb-1">$49</div>
+                        <p class="text-neutral-600">per month</p>
+                    </div>
+                    
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-check text-secondary"></i>
+                            <span class="text-neutral-700">Everything in Pro</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-check text-secondary"></i>
+                            <span class="text-neutral-700">Priority AI processing</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-check text-secondary"></i>
+                            <span class="text-neutral-700">Custom branding</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-check text-secondary"></i>
+                            <span class="text-neutral-700">Analytics dashboard</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-check text-secondary"></i>
+                            <span class="text-neutral-700">Team collaboration</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-check text-secondary"></i>
+                            <span class="text-neutral-700">Priority support</span>
+                        </li>
+                    </ul>
+                    
+                    <button class="w-full bg-accent text-white py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors">
+                        Contact Sales
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: PricingSection -->
+
+    <!-- @COMPONENT: Footer -->
+    <footer class="bg-neutral-900 text-white py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div class="md:col-span-2">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="w-8 h-8 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center">
+                            <i class="fas fa-file-alt text-white text-sm"></i>
+                        </div>
+                        <span class="text-xl font-bold">SmartResume</span>
+                    </div>
+                    <p class="text-neutral-300 mb-6 max-w-md">
+                        Land your next job with Smart AI. Create personalized, job-targeted resumes and cover letters that get noticed by hiring managers.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-neutral-400 hover:text-white transition-colors">
+                            <i class="fab fa-twitter text-xl"></i>
+                        </a>
+                        <a href="#" class="text-neutral-400 hover:text-white transition-colors">
+                            <i class="fab fa-linkedin text-xl"></i>
+                        </a>
+                        <a href="#" class="text-neutral-400 hover:text-white transition-colors">
+                            <i class="fab fa-github text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold text-white mb-4">Product</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-neutral-300 hover:text-white transition-colors">Features</a></li>
+                        <li><a href="#" class="text-neutral-300 hover:text-white transition-colors">Templates</a></li>
+                        <li><a href="#" class="text-neutral-300 hover:text-white transition-colors">Pricing</a></li>
+                        <li><a href="#" class="text-neutral-300 hover:text-white transition-colors">API</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold text-white mb-4">Company</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-neutral-300 hover:text-white transition-colors">About</a></li>
+                        <li><a href="#" class="text-neutral-300 hover:text-white transition-colors">Blog</a></li>
+                        <li><a href="#" class="text-neutral-300 hover:text-white transition-colors">Careers</a></li>
+                        <li><a href="#" class="text-neutral-300 hover:text-white transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-neutral-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-neutral-400 text-sm">© 2024 SmartResume. All rights reserved.</p>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <a href="#" class="text-neutral-400 hover:text-white text-sm transition-colors">Privacy Policy</a>
+                    <a href="#" class="text-neutral-400 hover:text-white text-sm transition-colors">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- @END_COMPONENT: Footer -->
+
+    <script>
+        // TODO: Implement business logic, API calls, or state management
+        (function() {
+            // Smooth scrolling for navigation links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // Mock form interactions
+            document.querySelectorAll('input, textarea, select').forEach(element => {
+                element.addEventListener('focus', function() {
+                    this.parentElement.classList.add('focused');
+                });
+                
+                element.addEventListener('blur', function() {
+                    this.parentElement.classList.remove('focused');
+                });
+            });
+
+            // Mock AI generation loading state
+            const generateButton = document.querySelector('button:contains("Generate Optimized Resume")');
+            if (generateButton) {
+                generateButton.addEventListener('click', function() {
+                    // TODO: Implement actual AI generation API call
+                    console.log('AI generation would start here');
+                });
+            }
+        })();
+    </script>
+</body>
+</html>
