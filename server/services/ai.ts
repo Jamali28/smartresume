@@ -2,7 +2,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import type { ResumeForm, PersonalInfo, Experience, Education } from '@shared/schema';
 
 // Initialize Google Gemini AI
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
 const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro' });
 
 export interface AIOptimizationResult {
@@ -23,8 +23,8 @@ export async function analyzeJobAndOptimizeResume(
   resumeData: ResumeForm,
   jobDescription: string
 ): Promise<AIOptimizationResult> {
-  if (!process.env.GEMINI_API_KEY) {
-    throw new Error('GEMINI_API_KEY is required for AI optimization');
+  if (!process.env.GOOGLE_API_KEY) {
+    throw new Error('GOOGLE_API_KEY is required for AI optimization');
   }
 
   try {
@@ -96,8 +96,8 @@ export async function generateCoverLetter(
   jobDescription: string,
   tone: string = 'professional'
 ): Promise<string> {
-  if (!process.env.GEMINI_API_KEY) {
-    throw new Error('GEMINI_API_KEY is required for cover letter generation');
+  if (!process.env.GOOGLE_API_KEY) {
+    throw new Error('GOOGLE_API_KEY is required for cover letter generation');
   }
 
   try {
@@ -158,7 +158,7 @@ export async function generateResumeInsights(resume: any): Promise<{
   improvements: string[];
   suggestions: string[];
 }> {
-  if (!process.env.GEMINI_API_KEY) {
+  if (!process.env.GOOGLE_API_KEY) {
     return {
       strengths: ['Professional experience documented'],
       improvements: ['Consider adding more quantifiable achievements'],
