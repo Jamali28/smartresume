@@ -1,207 +1,201 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenerativeAI } from '@google/generative-ai';
+import type { ResumeForm, PersonalInfo, Experience, Education } from '@shared/schema';
 
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY!);
+// Initialize Google Gemini AI
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
+const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro' });
 
-export interface JobAnalysisResult {
-  matchScore: number;
+export interface AIOptimizationResult {
   enhancedSummary: string;
-  optimizedExperience: Array<{
-    position: string;
-    company: string;
-    startDate: string;
-    endDate?: string;
-    current: boolean;
-    description: string;
-  }>;
+  optimizedExperience: Experience[];
   suggestedSkills: string[];
-  feedback: string;
+  matchScore: number;
+  optimizations: string[];
 }
 
-export interface CoverLetterRequest {
-  personalInfo: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    phone: string;
-    location: string;
-    title: string;
-  };
-  experience: Array<{
-    position: string;
-    company: string;
-    description: string;
-  }>;
-  jobDescription: string;
-  tone: string;
+export interface ResumeContentResult {
+  optimizedResume: ResumeForm;
+  matchScore: number;
+  optimizations: string[];
 }
 
 export async function analyzeJobAndOptimizeResume(
-  resumeData: any,
+  resumeData: ResumeForm,
   jobDescription: string
-): Promise<JobAnalysisResult> {
-  try {
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+): Promise<AIOptimizationResult> {
+  if (!process.env.GEMINI_API_KEY) {
+    throw new Error('GEMINI_API_KEY is required for AI optimization');
+  }
 
-    const prompt = `You are an expert resume optimizer and ATS specialist. Your task is to analyze a job description and optimize a resume to maximize the match score and improve ATS compatibility.
+  try {
+    const prompt = `
+You are an expert resume optimizer. Analyze the job description and optimize the resume content accordingly.
 
 Job Description:
 ${jobDescription}
 
 Current Resume Data:
-Name: ${resumeData.personalInfo.firstName} ${resumeData.personalInfo.lastName}
-Title: ${resumeData.personalInfo.title}
-Summary: ${resumeData.summary || "No summary provided"}
+- Personal Info: ${JSON.stringify(resumeData.personalInfo)}
+- Experience: ${JSON.stringify(resumeData.experience)}
+- Education: ${JSON.stringify(resumeData.education)}
+- Skills: ${JSON.stringify(resumeData.skills)}
 
-Experience:
-${resumeData.experience.map((exp: any) => `
-- ${exp.position} at ${exp.company}
-  ${exp.description}
-`).join('')}
+Please provide:
+1. An enhanced professional summary (2-3 sentences)
+2. Optimized experience descriptions that better match the job requirements
+3. Suggested additional skills based on the job description
+4. A match score (0-100) indicating how well the resume aligns with the job
+5. Key optimizations made
 
-Current Skills: ${resumeData.skills.join(', ')}
-
-Please analyze this job description and optimize the resume for maximum ATS compatibility and relevance. Focus on:
-1. Calculating an accurate match score
-2. Enhancing the professional summary with relevant keywords
-3. Optimizing experience descriptions with action verbs and quantifiable achievements
-4. Suggesting additional relevant skills from the job description
-5. Ensuring ATS-friendly formatting and keyword density
-
-Provide your response in JSON format with the following structure:
+Respond in the following JSON format:
 {
-  "matchScore": number (0-100),
-  "enhancedSummary": "optimized professional summary",
-  "optimizedExperience": array of experience objects with optimized descriptions,
-  "suggestedSkills": array of relevant skills to add,
-  "feedback": "brief explanation of changes made"
-}`;
+  "enhancedSummary": "Enhanced professional summary here",
+  "optimizedExperience": [array of experience objects with enhanced descriptions],
+  "suggestedSkills": ["skill1", "skill2", "skill3"],
+  "matchScore": 85,
+  "optimizations": ["optimization1", "optimization2", "optimization3"]
+}
+
+Ensure the optimized experience array maintains the same structure as the input with position, company, startDate, endDate, current, and description fields.
+`;
 
     const result = await model.generateContent(prompt);
     const response = await result.response;
     const text = response.text();
     
-    // Extract JSON from response
+    // Try to parse JSON from the response
     const jsonMatch = text.match(/\{[\s\S]*\}/);
     if (!jsonMatch) {
-      throw new Error("No JSON found in response");
+      throw new Error('Invalid AI response format');
     }
     
-    const parsedResult = JSON.parse(jsonMatch[0]);
+    const aiResult = JSON.parse(jsonMatch[0]);
     
     return {
-      matchScore: Math.max(0, Math.min(100, parsedResult.matchScore || 0)),
-      enhancedSummary: parsedResult.enhancedSummary || resumeData.summary || '',
-      optimizedExperience: parsedResult.optimizedExperience || resumeData.experience,
-      suggestedSkills: parsedResult.suggestedSkills || [],
-      feedback: parsedResult.feedback || 'Analysis completed successfully.'
+      enhancedSummary: aiResult.enhancedSummary || resumeData.personalInfo.summary || '',
+      optimizedExperience: aiResult.optimizedExperience || resumeData.experience,
+      suggestedSkills: aiResult.suggestedSkills || [],
+      matchScore: aiResult.matchScore || 0,
+      optimizations: aiResult.optimizations || []
     };
   } catch (error) {
-    console.error("Error analyzing job and optimizing resume:", error);
-    throw new Error("Failed to analyze job description and optimize resume");
+    console.error('AI optimization error:', error);
+    // Return original data if AI fails
+    return {
+      enhancedSummary: resumeData.personalInfo.summary || '',
+      optimizedExperience: resumeData.experience,
+      suggestedSkills: [],
+      matchScore: 0,
+      optimizations: ['AI optimization temporarily unavailable']
+    };
   }
 }
 
-export async function generateCoverLetter(request: CoverLetterRequest): Promise<string> {
+export async function generateCoverLetter(
+  resume: any,
+  jobDescription: string,
+  tone: string = 'professional'
+): Promise<string> {
+  if (!process.env.GEMINI_API_KEY) {
+    throw new Error('GEMINI_API_KEY is required for cover letter generation');
+  }
+
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
-
-    const prompt = `You are an expert cover letter writer. Create compelling, personalized cover letters that highlight relevant experience and demonstrate genuine interest in the role. Write in a ${request.tone} tone.
-
-Create a cover letter for the following:
+    const personalInfo = resume.personalInfo as PersonalInfo;
+    const experience = resume.experience as Experience[];
+    
+    const prompt = `
+Generate a professional cover letter based on the following information:
 
 Personal Information:
-- Name: ${request.personalInfo.firstName} ${request.personalInfo.lastName}
-- Title: ${request.personalInfo.title}
-- Email: ${request.personalInfo.email}
-- Phone: ${request.personalInfo.phone}
-- Location: ${request.personalInfo.location}
+- Name: ${personalInfo.firstName} ${personalInfo.lastName}
+- Email: ${personalInfo.email}
+- Phone: ${personalInfo.phone}
+- Location: ${personalInfo.location}
+- Professional Title: ${personalInfo.title}
 
-Relevant Experience:
-${request.experience.map(exp => `- ${exp.position} at ${exp.company}: ${exp.description}`).join('\n')}
+Recent Experience:
+${experience.slice(0, 2).map(exp => `- ${exp.position} at ${exp.company}: ${exp.description}`).join('\n')}
+
+Skills: ${resume.skills.join(', ')}
 
 Job Description:
-${request.jobDescription}
+${jobDescription}
 
-Requirements:
-1. Start with a compelling opening that shows genuine interest
-2. Highlight 2-3 most relevant experiences that match the job requirements
-3. Demonstrate knowledge of the company/role
-4. Include a strong closing with call to action
-5. Keep it concise (3-4 paragraphs)
-6. Use a ${request.tone} tone throughout
-7. Avoid generic phrases and clichés
+Tone: ${tone}
 
-Provide only the cover letter content, no additional formatting or explanations.`;
+Please write a compelling cover letter that:
+1. Addresses the specific job requirements
+2. Highlights relevant experience and skills
+3. Shows enthusiasm for the role
+4. Maintains a ${tone} tone
+5. Is approximately 3-4 paragraphs long
+
+Do not include placeholders like [Company Name] - use specific information from the job description when available.
+Format as plain text without any markup.
+`;
 
     const result = await model.generateContent(prompt);
     const response = await result.response;
     return response.text();
   } catch (error) {
-    console.error("Error generating cover letter:", error);
-    throw new Error("Failed to generate cover letter");
+    console.error('Cover letter generation error:', error);
+    return `Dear Hiring Manager,
+
+I am writing to express my interest in the position described in your job posting. With my background as a ${resume.personalInfo.title} and experience in ${resume.skills.slice(0, 3).join(', ')}, I believe I would be a valuable addition to your team.
+
+My professional experience includes ${resume.experience[0]?.position} at ${resume.experience[0]?.company}, where I gained valuable skills that align with your requirements. I am particularly excited about the opportunity to contribute to your organization and further develop my expertise in this field.
+
+Thank you for considering my application. I look forward to the opportunity to discuss how my background and enthusiasm can contribute to your team's success.
+
+Sincerely,
+${resume.personalInfo.firstName} ${resume.personalInfo.lastName}`;
   }
 }
 
-export async function generateResumeInsights(resumeData: any): Promise<{
-  strengthsScore: number;
-  weaknessesScore: number;
+export async function generateResumeInsights(resume: any): Promise<{
+  strengths: string[];
+  improvements: string[];
   suggestions: string[];
-  overallRating: number;
 }> {
+  if (!process.env.GEMINI_API_KEY) {
+    return {
+      strengths: ['Professional experience documented'],
+      improvements: ['Consider adding more quantifiable achievements'],
+      suggestions: ['Include relevant certifications or training']
+    };
+  }
+
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+    const prompt = `
+Analyze this resume and provide insights:
 
-    const prompt = `You are a resume analysis expert. Analyze the provided resume and provide insights on its strengths, weaknesses, and improvement suggestions.
+${JSON.stringify(resume, null, 2)}
 
-Analyze this resume:
-
-Personal Info: ${resumeData.personalInfo.firstName} ${resumeData.personalInfo.lastName}
-Title: ${resumeData.personalInfo.title}
-Summary: ${resumeData.summary || "No summary provided"}
-
-Experience:
-${resumeData.experience.map((exp: any) => `${exp.position} at ${exp.company}: ${exp.description}`).join('\n')}
-
-Education:
-${resumeData.education.map((edu: any) => `${edu.degree} from ${edu.school}`).join('\n')}
-
-Skills: ${resumeData.skills.join(', ')}
-
-Provide detailed analysis focusing on:
-1. Content quality and relevance
-2. Achievement quantification
-3. Keyword optimization
-4. Structure and formatting
-5. ATS compatibility
-
-Provide your response in JSON format:
+Provide analysis in JSON format:
 {
-  "strengthsScore": number (0-100),
-  "weaknessesScore": number (0-100),
-  "suggestions": array of specific improvement suggestions,
-  "overallRating": number (0-100)
-}`;
+  "strengths": ["strength1", "strength2", "strength3"],
+  "improvements": ["improvement1", "improvement2", "improvement3"],
+  "suggestions": ["suggestion1", "suggestion2", "suggestion3"]
+}
+`;
 
     const result = await model.generateContent(prompt);
     const response = await result.response;
     const text = response.text();
     
-    // Extract JSON from response
     const jsonMatch = text.match(/\{[\s\S]*\}/);
     if (!jsonMatch) {
-      throw new Error("No JSON found in response");
+      throw new Error('Invalid AI response format');
     }
     
-    const parsedResult = JSON.parse(jsonMatch[0]);
-    
-    return {
-      strengthsScore: Math.max(0, Math.min(100, parsedResult.strengthsScore || 75)),
-      weaknessesScore: Math.max(0, Math.min(100, parsedResult.weaknessesScore || 25)),
-      suggestions: parsedResult.suggestions || [],
-      overallRating: Math.max(0, Math.min(100, parsedResult.overallRating || 75))
-    };
+    return JSON.parse(jsonMatch[0]);
   } catch (error) {
-    console.error("Error generating resume insights:", error);
-    throw new Error("Failed to generate resume insights");
+    console.error('Resume insights error:', error);
+    return {
+      strengths: ['Professional experience documented'],
+      improvements: ['Consider adding more quantifiable achievements'],
+      suggestions: ['Include relevant certifications or training']
+    };
   }
 }

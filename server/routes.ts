@@ -42,7 +42,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const aiResult = await analyzeJobAndOptimizeResume(resumeData, resumeData.jobDescription);
         optimizedContent = {
           ...resumeData,
-          summary: aiResult.enhancedSummary,
+          personalInfo: {
+            ...resumeData.personalInfo,
+            summary: aiResult.enhancedSummary
+          },
           experience: aiResult.optimizedExperience,
           skills: [...resumeData.skills, ...aiResult.suggestedSkills]
         };
@@ -239,14 +242,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
         jobDescription,
       };
 
-      const aiResult = await generateResumeContent(resumeForm, jobDescription);
+      const aiResult = await analyzeJobAndOptimizeResume(resumeForm, jobDescription);
       
       const updatedResume = await storage.updateResume(req.params.id, {
-        personalInfo: aiResult.optimizedResume.personalInfo,
-        experience: aiResult.optimizedResume.experience,
-        education: aiResult.optimizedResume.education,
-        skills: aiResult.optimizedResume.skills,
-        summary: aiResult.optimizedResume.personalInfo.summary,
+        personalInfo: {
+          ...resume.personalInfo as any,
+          summary: aiResult.enhancedSummary
+        },
+        experience: aiResult.optimizedExperience,
+        skills: [...resume.skills, ...aiResult.suggestedSkills],
+        summary: aiResult.enhancedSummary,
         jobDescription,
         matchScore: aiResult.matchScore,
       });

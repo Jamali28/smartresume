@@ -97,12 +97,13 @@ export default function ResumeBuilder() {
   // Populate form when editing
   useEffect(() => {
     if (resume && isEditing) {
-      const personalInfo = resume.personalInfo as any;
-      const experience = resume.experience as any[];
-      const education = resume.education as any[];
+      const resumeData = resume as any;
+      const personalInfo = resumeData.personalInfo || {};
+      const experience = resumeData.experience || [];
+      const education = resumeData.education || [];
 
       form.reset({
-        title: resume.title,
+        title: resumeData.title || "",
         personalInfo: {
           firstName: personalInfo.firstName || "",
           lastName: personalInfo.lastName || "",
@@ -126,9 +127,9 @@ export default function ResumeBuilder() {
           graduationDate: "",
           gpa: "",
         }],
-        skills: resume.skills.length > 0 ? resume.skills : [""],
-        templateId: resume.templateId,
-        jobDescription: resume.jobDescription || "",
+        skills: (resumeData.skills || []).length > 0 ? resumeData.skills : [""],
+        templateId: resumeData.templateId || "modern",
+        jobDescription: resumeData.jobDescription || "",
       });
     }
   }, [resume, isEditing, form]);
