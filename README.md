@@ -134,6 +134,28 @@ High-quality PDF export with:
 4. Add tests if needed
 5. Submit a pull request
 
+
+
+## Deployment (Vercel)
+
+This app is deployed using [Vercel](https://vercel.com).
+
+### Vercel Configuration
+
+Create a `vercel.json` file:
+
+```json
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist/public",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
+
 ## License
 
 MIT License - see LICENSE file for details
